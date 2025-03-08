@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_go/screen/HomeScreen.dart';
 import 'package:food_go/screen/onboarding.dart';
 
 void main() {
@@ -33,7 +34,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Onboarding(),
+      // home: const Onboarding(),
+      home: Homescreen(),
     );
   }
 }

@@ -29,12 +29,12 @@ class _OnboardingState extends State<Onboarding> {
               style: AppWidget.SimpleTextFieldStyle(),),
 
             SizedBox(
-              height: 12,
+              height: 12.0,
             ),
             Container(
               height: 60,
               width: MediaQuery.of(context).size.width/2,
-              decoration: BoxDecoration(color: Color(0xff8c592a)),
+              decoration: BoxDecoration(color: Color(0xff8c592a),borderRadius: BorderRadius.circular(20)),
               child:
               Center(
                 child:Text("Get Started",style: TextStyle(color: Colors.white,fontSize: 20.0,fontWeight: FontWeight.bold),),
