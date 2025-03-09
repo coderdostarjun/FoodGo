@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:food_go/model/burger_model.dart';
 import 'package:food_go/model/category_model.dart';
+import 'package:food_go/model/pizza_model.dart';
+import 'package:food_go/service/burger_data.dart';
 import 'package:food_go/service/category_data.dart';
+import 'package:food_go/service/pizza_dart.dart';
 import 'package:food_go/service/widget_support.dart';
 
 class Homescreen extends StatefulWidget {
@@ -12,12 +16,16 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   List<CategoryModel> categoires=[];
+  List<PizzaModel> pizza=[];
+  List<BurgerModel> burger=[];
   String track="0";
 
   @override
   void initState() {
     // TODO: implement initState
     categoires=getCategories();
+    pizza=getPizza();
+    burger=getBurger();
     // print(categoires[2].name);
     super.initState();
   }
@@ -85,11 +93,41 @@ class _HomescreenState extends State<Homescreen> {
                    itemBuilder: (context,index){
                  return CategoryTile(name: categoires[index].name!, image: categoires[index].image!,categoryIndex: index.toString(),);
                }),
-             )
+             ),
+
+            SizedBox(height: 15.0,),
+            track=="0"?
+            Expanded(
+              child: GridView.builder(
+                padding: EdgeInsets.zero,
+                  gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.8,mainAxisSpacing: 17.0,crossAxisSpacing: 24.0),
+                  itemCount: pizza.length,
+                  itemBuilder: (context,index)
+
+              {
+              return FoodTile(name: pizza[index].name!, image: pizza[index].image!, price:pizza[index].price!);
+
+              }),
+            ):track=="1"?Expanded(
+              child: GridView.builder(
+                  padding: EdgeInsets.zero,
+                  gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.8,mainAxisSpacing: 17.0,crossAxisSpacing: 24.0),
+                  itemCount: burger.length,
+                  itemBuilder: (context,index)
+
+                  {
+                    return FoodTile(name: burger[index].name!, image: burger[index].image!, price:burger[index].price!);
+
+                  }),
+            ):Container(),
+
           ],
         ),
       ),);
   }
+
+
+  //create CategoryIile widget
   Widget CategoryTile({required String name,required String image, required String categoryIndex})
   {
     return GestureDetector(
@@ -106,6 +144,7 @@ class _HomescreenState extends State<Homescreen> {
         child:Row(
           children: [
             Image.asset(image,height: 40,width: 40,fit: BoxFit.cover,),
+            SizedBox(width: 0.5,),
             Text(name,style:AppWidget.whiteTextFieldStyle(),),
           ],
         ) ,
@@ -122,5 +161,39 @@ class _HomescreenState extends State<Homescreen> {
       ),
     );
   }
+
+  //create FoodTile Widget
+  Widget FoodTile({required String name,required String image, required String price})
+  {
+    return Container(
+      margin: EdgeInsets.only(right: 10.0),
+      padding: EdgeInsets.only(left: 10.0,top: 10.0),
+      decoration: BoxDecoration(border: Border.all(color: Colors.black38),borderRadius:BorderRadius.circular(20)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+        Center(child: Image.asset(image,height: 100,width: 100,fit: BoxFit.cover,)),
+            Text(name,style: AppWidget.boldTextFiledStyle(),),
+            Text("\$"+ price,style: AppWidget.priceTextFiledStyle(),),
+          Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                height: 50,
+                width: 80,
+                decoration: BoxDecoration(color: Color(0xffef2b39),borderRadius: BorderRadius.only(topLeft: Radius.circular(26),bottomRight: Radius.circular(18))),
+                child: Icon(Icons.arrow_forward,color: Colors.white,size: 30.0,),
+              ),
+            ],
+          )
+
+        ],
+      ),
+    );
+  }
+
+
+
 }
 
