@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:food_go/screen/BottomNavBar.dart';
+import 'package:food_go/screen/BottomNavBarScreen.dart';
 import 'package:food_go/screen/HomeScreen.dart';
+import 'package:food_go/screen/WalletScreen.dart';
 import 'package:food_go/screen/onboarding.dart';
 
 void main() {
@@ -35,7 +38,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const Onboarding(),
-      home: Homescreen(),
+      home:Bottomnavbarscreen(),
     );
   }
 }

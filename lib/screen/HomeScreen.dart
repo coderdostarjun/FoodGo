@@ -100,7 +100,7 @@ class _HomescreenState extends State<Homescreen> {
             Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.zero,
-                  gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.8,mainAxisSpacing: 17.0,crossAxisSpacing: 24.0),
+                  gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.67,mainAxisSpacing: 17.0,crossAxisSpacing: 24.0),
                   itemCount: pizza.length,
                   itemBuilder: (context,index)
 
@@ -111,7 +111,7 @@ class _HomescreenState extends State<Homescreen> {
             ):track=="1"?Expanded(
               child: GridView.builder(
                   padding: EdgeInsets.zero,
-                  gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.8,mainAxisSpacing: 17.0,crossAxisSpacing: 24.0),
+                  gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.67,mainAxisSpacing: 17.0,crossAxisSpacing: 24.0),
                   itemCount: burger.length,
                   itemBuilder: (context,index)
 
