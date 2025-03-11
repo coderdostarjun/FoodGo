@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_go/model/burger_model.dart';
 import 'package:food_go/model/category_model.dart';
 import 'package:food_go/model/pizza_model.dart';
+import 'package:food_go/screen/DetailScreen.dart';
 import 'package:food_go/service/burger_data.dart';
 import 'package:food_go/service/category_data.dart';
 import 'package:food_go/service/pizza_dart.dart';
@@ -103,7 +104,6 @@ class _HomescreenState extends State<Homescreen> {
                   gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.67,mainAxisSpacing: 17.0,crossAxisSpacing: 24.0),
                   itemCount: pizza.length,
                   itemBuilder: (context,index)
-
               {
               return FoodTile(name: pizza[index].name!, image: pizza[index].image!, price:pizza[index].price!);
 
@@ -179,11 +179,16 @@ class _HomescreenState extends State<Homescreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                height: 50,
-                width: 80,
-                decoration: BoxDecoration(color: Color(0xffef2b39),borderRadius: BorderRadius.only(topLeft: Radius.circular(26),bottomRight: Radius.circular(18))),
-                child: Icon(Icons.arrow_forward,color: Colors.white,size: 30.0,),
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>Detailscreen(image: image,name: name,price: price,)));
+                },
+                child: Container(
+                  height: 50,
+                  width: 80,
+                  decoration: BoxDecoration(color: Color(0xffef2b39),borderRadius: BorderRadius.only(topLeft: Radius.circular(26),bottomRight: Radius.circular(18))),
+                  child: Icon(Icons.arrow_forward,color: Colors.white,size: 30.0,),
+                ),
               ),
             ],
           )

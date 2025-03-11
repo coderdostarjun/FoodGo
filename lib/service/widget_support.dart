@@ -21,4 +21,8 @@ class AppWidget
   {
     return TextStyle(color:const Color.fromARGB(174, 0, 0, 0),fontSize: 24.0,fontWeight: FontWeight.bold);
   }
+  static TextStyle boldwhiteTextFieldStyle()
+  {
+    return TextStyle(color: Colors.white,fontSize: 28.0,fontWeight: FontWeight.bold);
+  }
 }
