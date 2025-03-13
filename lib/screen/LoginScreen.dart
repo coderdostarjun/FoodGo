@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:food_go/screen/LoginScreen.dart';
-import 'package:food_go/service/widget_support.dart';
+import 'package:food_go/screen/SignUpScreen.dart';
 
-class Signupscreen extends StatefulWidget {
-  const Signupscreen({super.key});
+import '../service/widget_support.dart';
+
+class Loginscreen extends StatefulWidget {
+  const Loginscreen({super.key});
 
   @override
-  State<Signupscreen> createState() => _SignupscreenState();
+  State<Loginscreen> createState() => _LoginscreenState();
 }
 
-class _SignupscreenState extends State<Signupscreen> {
+class _LoginscreenState extends State<Loginscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +61,8 @@ class _SignupscreenState extends State<Signupscreen> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20)),
-                  height: MediaQuery.of(context).size.height / 1.6, //chang the height of the signup box
+                  height: MediaQuery.of(context).size.height /
+                      1.6, //chang the height of the signup box
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -69,29 +71,9 @@ class _SignupscreenState extends State<Signupscreen> {
                       ),
                       Center(
                           child: Text(
-                        "SignUp",
+                        "LogIn",
                         style: AppWidget.HeadLineTextFieldStyle(),
                       )),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Text(
-                        "Name",
-                        style: AppWidget.signUpTextFiledStyle(),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xffececf8),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: TextField(
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Enter Name",
-                                prefixIcon: Icon(Icons.person_outline)),
-                          )),
                       SizedBox(
                         height: 20.0,
                       ),
@@ -132,33 +114,62 @@ class _SignupscreenState extends State<Signupscreen> {
                                 hintText: "Enter Password",
                                 prefixIcon: Icon(Icons.password_outlined)),
                           )),
-                      SizedBox(height: 30.0,),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            "Forgot Password?",
+                            style: AppWidget.SimpleTextFieldStyle(),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
                       Center(
                         child: Container(
                           height: 50,
                           width: 200,
                           decoration: BoxDecoration(
                             color: Color(0xffef2b39),
-                           borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Center( child: Text("Sign Up",style: AppWidget.boldwhiteTextFieldStyle(),),
-                        ),),
+                          child: Center(
+                            child: Text(
+                              "Log In",
+                              style: AppWidget.boldwhiteTextFieldStyle(),
+                            ),
+                          ),
+                        ),
                       ),
-                      SizedBox(height: 15.0,),
+                      SizedBox(
+                        height: 15.0,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Already have an account?",style: AppWidget.SimpleTextFieldStyle(),),
-                          SizedBox(width: 10.0,),
+                          Text(
+                            "Don't have an account?",
+                            style: AppWidget.SimpleTextFieldStyle(),
+                          ),
+                          SizedBox(
+                            width: 10.0,
+                          ),
                           GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Loginscreen()));
-
+                            onTap: ()
+                            {
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Signupscreen()));
                             },
-                              child: Text("LogIn",style: AppWidget.boldTextFiledStyle(),)),
-
+                            child: Text(
+                              "SignUp",
+                              style: AppWidget.boldTextFiledStyle(),
+                            ),
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

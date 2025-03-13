@@ -3,6 +3,7 @@ import 'package:food_go/screen/BottomNavBar.dart';
 import 'package:food_go/screen/BottomNavBarScreen.dart';
 import 'package:food_go/screen/DetailScreen.dart';
 import 'package:food_go/screen/HomeScreen.dart';
+import 'package:food_go/screen/LoginScreen.dart';
 import 'package:food_go/screen/SignUpScreen.dart';
 import 'package:food_go/screen/WalletScreen.dart';
 import 'package:food_go/screen/onboarding.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const Onboarding(),
-      home:Signupscreen(),
+      home:Loginscreen(),
     );
   }
 }
