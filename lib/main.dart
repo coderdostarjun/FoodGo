@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:food_go/screen/BottomNavBar.dart';
 import 'package:food_go/screen/BottomNavBarScreen.dart';
@@ -8,7 +9,12 @@ import 'package:food_go/screen/SignUpScreen.dart';
 import 'package:food_go/screen/WalletScreen.dart';
 import 'package:food_go/screen/onboarding.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();//Firebase को initialization लाई सुनिश्चित गर्नुपर्छ।
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); // Firebase लाई Flutter एपमा लोड गर्नुपर्छ ra load garda time lagna sakna vako le await lagako
+  //ball kunaplatform ma load garna thavayesi matra app run hunxa
   runApp(const MyApp());
 }
 
