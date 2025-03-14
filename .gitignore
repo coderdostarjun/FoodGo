@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+#ignore the firebase options file which contain api key
+lib/firebase_options.dart
