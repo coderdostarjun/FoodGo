@@ -62,115 +62,118 @@ class _LoginscreenState extends State<Loginscreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20)),
                   height: MediaQuery.of(context).size.height /
-                      1.6, //chang the height of the signup box
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Center(
-                          child: Text(
-                        "LogIn",
-                        style: AppWidget.HeadLineTextFieldStyle(),
-                      )),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Text(
-                        "Email",
-                        style: AppWidget.signUpTextFiledStyle(),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xffececf8),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: TextField(
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Enter Email",
-                                prefixIcon: Icon(Icons.mail_outline)),
-                          )),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Text(
-                        "Password",
-                        style: AppWidget.signUpTextFiledStyle(),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xffececf8),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: TextField(
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Enter Password",
-                                prefixIcon: Icon(Icons.password_outlined)),
-                          )),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            "Forgot Password?",
-                            style: AppWidget.SimpleTextFieldStyle(),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      Center(
-                        child: Container(
-                          height: 50,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: Color(0xffef2b39),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Center(
+                      1.6, //change the height of the signup box
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Center(
                             child: Text(
-                              "Log In",
-                              style: AppWidget.boldwhiteTextFieldStyle(),
+                          "LogIn",
+                          style: AppWidget.HeadLineTextFieldStyle(),
+                        )),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text(
+                          "Email",
+                          style: AppWidget.signUpTextFiledStyle(),
+                        ),
+                        SizedBox(
+                          height: 5.0,
+                        ),
+                        Container(
+                            decoration: BoxDecoration(
+                                color: Color(0xffececf8),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Enter Email",
+                                  prefixIcon: Icon(Icons.mail_outline)),
+                            )),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text(
+                          "Password",
+                          style: AppWidget.signUpTextFiledStyle(),
+                        ),
+                        SizedBox(
+                          height: 5.0,
+                        ),
+                        Container(
+                            decoration: BoxDecoration(
+                                color: Color(0xffececf8),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Enter Password",
+                                  prefixIcon: Icon(Icons.password_outlined)),
+                            )),
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              "Forgot Password?",
+                              style: AppWidget.SimpleTextFieldStyle(),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        Center(
+                          child: Container(
+                            height: 50,
+                            width: 200,
+                            decoration: BoxDecoration(
+                              color: Color(0xffef2b39),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Log In",
+                                style: AppWidget.boldwhiteTextFieldStyle(),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Don't have an account?",
-                            style: AppWidget.SimpleTextFieldStyle(),
-                          ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          GestureDetector(
-                            onTap: ()
-                            {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>Signupscreen()));
-                            },
-                            child: Text(
-                              "SignUp",
-                              style: AppWidget.boldTextFiledStyle(),
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have an account?",
+                              style: AppWidget.SimpleTextFieldStyle(),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            GestureDetector(
+                              onTap: ()
+                              {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>Signupscreen()));
+                              },
+                              child: Text(
+                                "SignUp",
+                                style: AppWidget.boldTextFiledStyle(),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20.0),
+                      ],
+                    ),
                   ),
                 ),
               ),
