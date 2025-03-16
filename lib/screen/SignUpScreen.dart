@@ -38,8 +38,10 @@ class _SignupscreenState extends State<Signupscreen> {
           "Id": Id,
         };
         //for store data locally
-        // await SharedpreferencHelper().saveUserEmail(email);
-        // await SharedpreferencHelper().saveUserName(nameController.text);
+        await SharedPrefenceHelper().saveUserName(nameController.text);
+        await SharedPrefenceHelper().saveUserEmail(emailController.text);
+        print("aba username print hoga:");
+        print(SharedPrefenceHelper().getUserName().toString());
         //for store data on cloudfirestore
         await DatabaseMethods().addUserDetails(userInfoMap, Id);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

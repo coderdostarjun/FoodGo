@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_go/screen/SignUpScreen.dart';
 
 import '../service/widget_support.dart';
+import 'BottomNavBarScreen.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
@@ -11,6 +13,50 @@ class Loginscreen extends StatefulWidget {
 }
 
 class _LoginscreenState extends State<Loginscreen> {
+  String email = "", password = "";
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  userLogin() async
+  {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          // backgroundColor: Colors.green,
+        backgroundColor: Colors.blueAccent,
+          content: Text(
+            "Login Successfully",
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          )));
+      //when username and password correct push into BottomNavBArSCreen
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) =>Bottomnavbarscreen()));
+
+    } on FirebaseAuthException catch (e) {
+      print("Error Code: ${e.code}");
+      print("Error Message: ${e.message}");
+
+      String errorMessage = "An error occurred. Please try again.";
+
+      if (e.code == 'invalid-credential') {
+        errorMessage = "Invalid email or password. Please try again.";
+      } else if (e.code == 'user-disabled') {
+        errorMessage = "This account has been disabled. Contact support.";
+      } else if (e.code == 'too-many-requests') {
+        errorMessage = "Too many failed attempts. Try again later.";
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(
+          errorMessage,
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        ),
+      ));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +136,7 @@ class _LoginscreenState extends State<Loginscreen> {
                                 color: Color(0xffececf8),
                                 borderRadius: BorderRadius.circular(10)),
                             child: TextField(
+                              controller: emailController,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Enter Email",
@@ -110,6 +157,8 @@ class _LoginscreenState extends State<Loginscreen> {
                                 color: Color(0xffececf8),
                                 borderRadius: BorderRadius.circular(10)),
                             child: TextField(
+                              controller: passwordController,
+                              obscureText: true,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Enter Password",
@@ -130,18 +179,30 @@ class _LoginscreenState extends State<Loginscreen> {
                         SizedBox(
                           height: 30.0,
                         ),
-                        Center(
-                          child: Container(
-                            height: 50,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: Color(0xffef2b39),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Log In",
-                                style: AppWidget.boldwhiteTextFieldStyle(),
+                        GestureDetector(
+                          onTap: (){
+                            if(emailController.text!="" && passwordController.text!="")
+                              {
+                                setState(() {
+                                  email=emailController.text;
+                                  password=passwordController.text;
+                                });
+                              }
+                            userLogin();
+                          },
+                          child: Center(
+                            child: Container(
+                              height: 50,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                color: Color(0xffef2b39),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Log In",
+                                  style: AppWidget.boldwhiteTextFieldStyle(),
+                                ),
                               ),
                             ),
                           ),

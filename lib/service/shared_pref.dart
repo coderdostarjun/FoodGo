@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedpreferencHelper
+class SharedPrefenceHelper
 {
   static String userIdKey="USERKEY";
   static String userNameKey="USERNAMEKEY";
@@ -10,7 +10,8 @@ class SharedpreferencHelper
   Future<bool> saveUserId(String getUserId)async
   {
     SharedPreferences prefs=await SharedPreferences.getInstance();
-    return prefs.setString(userIdKey, getUserId);
+    return prefs.setString(userIdKey, getUserId); //userIdKey should be unique
+    //key(unique key) , value pair ma data store hunxa locally
   }
   Future<bool> saveUserName(String getUserName)async
   {
@@ -38,6 +39,8 @@ class SharedpreferencHelper
   {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     return prefs.getString(userNameKey);
+    //tehi key(unique key) ko help le data or value get garna sakxau juna locally store vako thiyo
+
   }
   Future<String?> getUserEmail() async
   {
