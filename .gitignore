@@ -47,3 +47,4 @@ app.*.map.json
 #ignore the firebase options file which contain api key
 lib/firebase_options.dart
 android/app/google-services.json
+lib/service/key_constants.dart
