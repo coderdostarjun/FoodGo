@@ -6,6 +6,7 @@ class SharedPrefenceHelper
   static String userNameKey="USERNAMEKEY";
   static String userEmailKey="USEREMAILKEY";
   static String userImageKey="USERIMAGEKEY";
+  static String userLocation="USERLOCATION";
 
   Future<bool> saveUserId(String getUserId)async
   {
@@ -29,6 +30,11 @@ class SharedPrefenceHelper
     SharedPreferences prefs=await SharedPreferences.getInstance();
     return prefs.setString(userImageKey,getUserImage);
   }
+  Future<bool> saveUserLocation(String getUserLocation)async
+  {
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    return prefs.setString(userLocation,getUserLocation);
+  }
 
   Future<String?> getUserId() async
   {
@@ -51,5 +57,10 @@ class SharedPrefenceHelper
   {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     return prefs.getString(userImageKey);
+  }
+  Future<String?> getUserLocation() async
+  {
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    return prefs.getString(userLocation);
   }
 }

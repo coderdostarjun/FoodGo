@@ -3,7 +3,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:food_go/service/database.dart';
+import 'package:food_go/service/shared_pref.dart';
 import 'package:food_go/service/widget_support.dart';
+import 'package:random_string/random_string.dart';
 
 import '../service/key_constants.dart';
 import 'package:http/http.dart' as http;
@@ -23,11 +26,28 @@ class _DetailscreenState extends State<Detailscreen> {
   void initState() {
     // TODO: implement initState
     totalprice=int.parse(widget.price);
+    getthesharedPref();
     super.initState();
   }
   //payment integration methods
   Map<String, dynamic>? paymentIntent;
+  
+  //get user name,id  which is stored locally during signup
+  String? name,id,email;
+  //method for getidAndName
+  getthesharedPref()async
+  {
+    name=await SharedPrefenceHelper().getUserName();
+    //testing
+    email=await SharedPrefenceHelper().getUserEmail();
+    print("email is +$email");
+    id=await SharedPrefenceHelper().getUserId();
 
+    setState(() {
+    });
+  }
+
+  //this methods are for payment integration and display payment success or failure message
   Future<void> makePayment(String amount) async {
     try {
       paymentIntent = await createPaymentIntent(amount, "USD");
@@ -75,6 +95,26 @@ class _DetailscreenState extends State<Detailscreen> {
     try {
       await Stripe.instance.presentPaymentSheet().then(
             (value) async {
+
+              //on successful payment store the user details and it's quantity ,totalamount price on cloudfirestore directly using map
+              String orderId=randomAlphaNumeric(10);
+              Map<String,dynamic> userOrderMap={
+                "Name":name,
+                "Email":email,
+                "Id":id,
+                "FoodName":widget.name,
+                "FoodImage":widget.image,
+                "Quantity":quantity.toString(),
+                "TotalAmount":totalprice.toString(),
+                "OrderId":orderId,
+                "Status":"Pending",
+              };
+              //kuna user le kuna order leyo store garna ko lagi
+              await DatabaseMethods().addUserOrderDetails(userOrderMap, id!, orderId);
+              //admin le order kuna kuna gayo herna ko lagi without integrate on user
+              //for ordermanagement: admin ko lagi
+              await DatabaseMethods().addAdminOrderDetails(userOrderMap, orderId);
+
           // On successful payment, show success message using Snackbar
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

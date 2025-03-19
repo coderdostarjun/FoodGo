@@ -38,6 +38,7 @@ class _SignupscreenState extends State<Signupscreen> {
           "Id": Id,
         };
         //for store data locally
+        await SharedPrefenceHelper().saveUserId(Id);
         await SharedPrefenceHelper().saveUserName(nameController.text);
         await SharedPrefenceHelper().saveUserEmail(emailController.text);
         print("aba username print hoga:");
