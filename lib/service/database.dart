@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class DatabaseMethods
 {
@@ -15,6 +16,10 @@ class DatabaseMethods
   Future addAdminOrderDetails(Map<String,dynamic> userOrderMap,String orderId)async
   {
     return await FirebaseFirestore.instance.collection("Orders").doc(orderId).set(userOrderMap);
+  }
+  Future<Stream<QuerySnapshot>> getUserOrders(String id) async
+  {
+    return await FirebaseFirestore.instance.collection("users").doc(id).collection("Orders").snapshots();
   }
 
 

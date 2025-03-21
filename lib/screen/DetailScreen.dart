@@ -108,6 +108,7 @@ class _DetailscreenState extends State<Detailscreen> {
                 "TotalAmount":totalprice.toString(),
                 "OrderId":orderId,
                 "Status":"Pending",
+                "Address":"Belbas",
               };
               //kuna user le kuna order leyo store garna ko lagi
               await DatabaseMethods().addUserOrderDetails(userOrderMap, id!, orderId);
