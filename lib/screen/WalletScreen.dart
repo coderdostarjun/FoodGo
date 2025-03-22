@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:food_go/service/database.dart';
+import 'package:food_go/service/shared_pref.dart';
 import 'package:food_go/service/widget_support.dart';
 import 'package:http/http.dart' as http;
 import 'package:random_string/random_string.dart';
@@ -17,7 +20,31 @@ class Walletscreen extends StatefulWidget {
 }
 
 class _WalletscreenState extends State<Walletscreen> {
+  //get wallet data from firestore
+  String? email,id,wallet;
+  getsharedpref() async
+  {
+    email=await SharedPrefenceHelper().getUserEmail();
+    id=await SharedPrefenceHelper().getUserId();
+  }
+   getUserWallet()async
+   {
+     QuerySnapshot querySnapshot=await DatabaseMethods().getUserWalletByEmail(email!);
+     wallet="${querySnapshot.docs[0]["Wallet"]}";
+     print("ma sanga vako paisa $wallet");
+     setState(() {
 
+     });
+   }
+@override
+  void initState() {
+    // TODO: implement initState
+  getsharedpref().then((_) {
+    getUserWallet();
+  });
+    super.initState();
+
+  }
   //payment integration methods
   Map<String, dynamic>? paymentIntent;
   int quantity=1,totalprice=0;
@@ -36,7 +63,7 @@ class _WalletscreenState extends State<Walletscreen> {
                 currencyCode: 'USD',
                 testEnv: true,
               )));
-      await displayPaymentSheet();
+      await displayPaymentSheet(amount);
     } catch (e) {
       log(e.toString());
     }
@@ -65,14 +92,23 @@ class _WalletscreenState extends State<Walletscreen> {
     }
   }
 
-  displayPaymentSheet() async {
+  displayPaymentSheet(String amount) async {
     try {
       await Stripe.instance.presentPaymentSheet().then(
             (value) async {
+
+              //jati paisa add garxa tyo database ma ni update hunxa
+              int updatedWallet=int.parse(wallet!)+int.parse(amount!);
+              await DatabaseMethods().updateUserWallet(updatedWallet.toString(), id!);
+              await getUserWallet();
+              setState(() {
+
+              });
+
           // On successful payment, show success message using Snackbar
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Payment Successful\nAmount: \$$totalprice"),
+              content: Text("\nAmount:\$$amount added Successfully on Wallet"),
               backgroundColor: Colors.green,
             ),
           );
@@ -100,10 +136,61 @@ class _WalletscreenState extends State<Walletscreen> {
     }
   }
 
+  //display dialog box method for add money
+  void showAddMoneyDialog() {
+    TextEditingController amountController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: Text("Add Money to Wallet", style: TextStyle(color: Color(0xff008080),fontSize: 20.0,fontWeight: FontWeight.bold)),
+          content: TextField(
+            controller: amountController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: "Enter amount",
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel", style: TextStyle(color: Colors.red)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                backgroundColor: Colors.greenAccent.shade700,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 5,
+                shadowColor: Colors.greenAccent,
+              ),
+              onPressed: () {
+                if (amountController.text.isNotEmpty) {
+                  makePayment(amountController.text);
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Please enter an amount")),
+                  );
+                }
+              },
+              child: Text("Add"),),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body:wallet==null?Center(child: CircularProgressIndicator()): Container(
         margin: EdgeInsets.only(top: 40.0),
         child: Column(
           children: [
@@ -145,7 +232,7 @@ class _WalletscreenState extends State<Walletscreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("Your Wallet",style: AppWidget.boldTextFiledStyle(),),
-                                  Text("\$0.00",style: AppWidget.HeadLineTextFieldStyle(),),
+                                  Text("\$"+wallet!,style: AppWidget.HeadLineTextFieldStyle(),),
                                 ],
                               ),
 
@@ -160,49 +247,72 @@ class _WalletscreenState extends State<Walletscreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            height: 50,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.black45,width: 2.0,),
-                              borderRadius: BorderRadius.circular(10),
+                          GestureDetector(
+                            onTap:()
+                      {
+                        makePayment("100");
+                      },
+                            child: Container(
+                              height: 50,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: Colors.black45,width: 2.0,),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(child: Text("\$100",style: AppWidget.priceTextFiledStyle(),)),
                             ),
-                            child: Center(child: Text("\$100",style: AppWidget.priceTextFiledStyle(),)),
                           ),
-                          Container(
-                            height: 50,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.black45,width: 2.0,),
-                              borderRadius: BorderRadius.circular(10),
+                          GestureDetector(
+                            onTap:()
+                            {
+                              makePayment("50");
+                            },
+                            child: Container(
+                              height: 50,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: Colors.black45,width: 2.0,),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(child: Text("\$50",style: AppWidget.priceTextFiledStyle(),)),
                             ),
-                            child: Center(child: Text("\$100",style: AppWidget.priceTextFiledStyle(),)),
                           ),
-                          Container(
-                            height: 50,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.black45,width: 2.0,),
-                              borderRadius: BorderRadius.circular(10),
+                          GestureDetector(
+                            onTap:()
+                            {
+                              makePayment("200");
+                            },
+                            child: Container(
+                              height: 50,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: Colors.black45,width: 2.0,),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(child: Text("\$200",style: AppWidget.priceTextFiledStyle(),)),
                             ),
-                            child: Center(child: Text("\$100",style: AppWidget.priceTextFiledStyle(),)),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(height: 30.0),
-                    Container(
-                      margin: EdgeInsets.only(left: 20.0,right: 20.0),
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Color(0xffef2b39),
-                        borderRadius: BorderRadius.circular(10),
+                    GestureDetector(
+                 onTap:(){
+                   showAddMoneyDialog();
+                    },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 20.0,right: 20.0),
+                        width: MediaQuery.of(context).size.width,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Color(0xffef2b39),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(child: Text("Add Money",style: AppWidget.boldwhiteTextFieldStyle(),)),
                       ),
-                      child: Center(child: Text("Add Money",style: AppWidget.boldwhiteTextFieldStyle(),)),
                     )
                   ],
                 ),
@@ -212,6 +322,7 @@ class _WalletscreenState extends State<Walletscreen> {
         ),
 
       ),
+
 
     );
   }

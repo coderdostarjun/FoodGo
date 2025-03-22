@@ -21,6 +21,14 @@ class DatabaseMethods
   {
     return await FirebaseFirestore.instance.collection("users").doc(id).collection("Orders").snapshots();
   }
+  Future<QuerySnapshot> getUserWalletByEmail(String email) async
+  {
+    return await FirebaseFirestore.instance.collection("users").where("Email",isEqualTo: email).get();
+  }
 
-
+Future updateUserWallet(String amount,String id) async
+{
+  return await FirebaseFirestore.instance.collection("users").doc(id).update(
+      {"Wallet":amount});
+}
 }

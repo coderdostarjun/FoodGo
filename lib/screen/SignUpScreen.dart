@@ -36,6 +36,7 @@ class _SignupscreenState extends State<Signupscreen> {
           "Name": nameController.text,
           "Email": emailController.text,
           "Id": Id,
+          "Wallet":"0",
         };
         //for store data locally
         await SharedPrefenceHelper().saveUserId(Id);

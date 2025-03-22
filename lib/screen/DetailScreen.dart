@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:food_go/service/database.dart';
@@ -26,14 +27,16 @@ class _DetailscreenState extends State<Detailscreen> {
   void initState() {
     // TODO: implement initState
     totalprice=int.parse(widget.price);
-    getthesharedPref();
+    getthesharedPref().then((_) {
+      getUserWallet();
+    });
     super.initState();
   }
   //payment integration methods
   Map<String, dynamic>? paymentIntent;
   
   //get user name,id  which is stored locally during signup
-  String? name,id,email;
+  String? name,id,email,address,wallet;
   //method for getidAndName
   getthesharedPref()async
   {
@@ -42,11 +45,72 @@ class _DetailscreenState extends State<Detailscreen> {
     email=await SharedPrefenceHelper().getUserEmail();
     print("email is +$email");
     id=await SharedPrefenceHelper().getUserId();
+    address=await SharedPrefenceHelper().getUserLocation();
 
     setState(() {
     });
   }
+  //getuserQallet
+  getUserWallet()async
+  {
+    QuerySnapshot querySnapshot=await DatabaseMethods().getUserWalletByEmail(email!);
+    wallet="${querySnapshot.docs[0]["Wallet"]}";
+    print("ma sanga vako paisa $wallet");
+    setState(() {
 
+    });
+  }
+//display dialog box method for add Address
+  TextEditingController addressController = TextEditingController();
+
+  void showAddAddressDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: Text("Add Your Current Location", style: TextStyle(color: Color(0xff008080),fontSize: 20.0,fontWeight: FontWeight.bold)),
+          content: TextField(
+            controller: addressController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              hintText: "Enter your location",
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel", style: TextStyle(color: Colors.red)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                backgroundColor: Colors.greenAccent.shade700,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 5,
+                shadowColor: Colors.greenAccent,
+              ),
+              onPressed: () {
+                if (addressController.text.isNotEmpty) {
+                  makePayment(totalprice.toString());
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Please enter an amount")),
+                  );
+                }
+              },
+              child: Text("Add"),),
+          ],
+        );
+      },
+    );
+  }
   //this methods are for payment integration and display payment success or failure message
   Future<void> makePayment(String amount) async {
     try {
@@ -108,7 +172,7 @@ class _DetailscreenState extends State<Detailscreen> {
                 "TotalAmount":totalprice.toString(),
                 "OrderId":orderId,
                 "Status":"Pending",
-                "Address":"Belbas",
+                "Address":address??addressController.text,
               };
               //kuna user le kuna order leyo store garna ko lagi
               await DatabaseMethods().addUserOrderDetails(userOrderMap, id!, orderId);
@@ -146,35 +210,6 @@ class _DetailscreenState extends State<Detailscreen> {
       );
     }
   }
-
-
-  // displayPaymentSheet() async {
-  //   try {
-  //     await Stripe.instance.presentPaymentSheet().then(
-  //           (value) async {
-  //             showDialog(context: context, builder: (_)=>AlertDialog(
-  //               content: Column(
-  //                 mainAxisAlignment: MainAxisAlignment.end,
-  //                 children: [
-  //                   Row(
-  //                     children: [
-  //                       Icon(Icons.check_circle,color: Colors.green,),
-  //                       Text("Payment Successfull")
-  //                     ],
-  //                   )
-  //                 ],
-  //               ),
-  //             ));
-  //         // await Stripe.instance.confirmPaymentSheetPayment();
-  //       },
-  //     );
-  //     paymentIntent = null;
-  //   } on StripeException catch (e) {
-  //     log(e.toString());
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -293,7 +328,8 @@ class _DetailscreenState extends State<Detailscreen> {
                       decoration: BoxDecoration(color: Colors.black,borderRadius: BorderRadius.circular(20)),
                       child: GestureDetector(
                           onTap:(){
-                            makePayment(totalprice.toString());
+                            // makePayment(totalprice.toString());
+                            showAddAddressDialog();
                           },
                           child: Center(child: Text("ORDER NOW",style: AppWidget.whiteTextFieldStyle(),))),
                     ),

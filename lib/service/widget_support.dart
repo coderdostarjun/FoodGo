@@ -30,4 +30,5 @@ class AppWidget
     return TextStyle(color:const Color.fromARGB(174, 0, 0, 0),fontSize: 20.0,fontWeight: FontWeight.bold);
   }
 
+
 }
