@@ -97,119 +97,182 @@ class _DetailscreenState extends State<Detailscreen> {
               ),
               onPressed: () {
                 if (addressController.text.isNotEmpty) {
-                  makePayment(totalprice.toString());
+                  // makePayment(totalprice.toString());
+                  deductAmountFromWallet();
                   Navigator.of(context).pop();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Please enter an amount")),
+                    SnackBar(content: Text("Please enter an address")),
                   );
                 }
               },
-              child: Text("Add"),),
+              child: Text("Pay"),),
           ],
         );
       },
     );
   }
-  //this methods are for payment integration and display payment success or failure message
-  Future<void> makePayment(String amount) async {
-    try {
-      paymentIntent = await createPaymentIntent(amount, "USD");
-      await Stripe.instance.initPaymentSheet(
-          paymentSheetParameters: SetupPaymentSheetParameters(
-              customFlow: true,
-              merchantDisplayName: 'Food Go',
-              paymentIntentClientSecret: paymentIntent!['client_secret'],
-              style: ThemeMode.dark,
-              googlePay: const PaymentSheetGooglePay(
-                merchantCountryCode: 'US',
-                currencyCode: 'USD',
-                testEnv: true,
-              )));
-      await displayPaymentSheet();
-    } catch (e) {
-      log(e.toString());
-    }
-  }
+  deductAmountFromWallet() async {
+    // Check if the user has enough funds
+    if (int.parse(wallet!) >= totalprice) {
+      // Deduct the amount from the wallet
+      int updatedWallet = int.parse(wallet!) - totalprice;
 
-  createPaymentIntent(String amount, String currency) async {
-    try {
-      Map<String, dynamic> body = {
-        'currency': currency,
-        // Convert amount to cents (or the smallest unit)
-        'amount': ((int.parse(amount)*100)).toString(), // Convert dollars to cents
-        'payment_method_types[]': 'card'
+      // Update the user's wallet in the database
+      await DatabaseMethods().updateUserWallet(updatedWallet.toString(),id!);
+
+      // Create order ID
+      String orderId = DateTime.now().millisecondsSinceEpoch.toString();
+
+      // Store order in Firestore for user and admin
+      Map<String, dynamic> userOrderMap = {
+        "Name": name,
+        "Email": email,
+        "Id": id,
+        "FoodName": widget.name,
+        "FoodImage": widget.image,
+        "Quantity": quantity.toString(),
+        "TotalAmount": totalprice.toString(),
+        "OrderId": orderId,
+        "Status": "Pending",
+        "Address": address ?? addressController.text,
       };
 
-      var response = await http.post(
-          Uri.parse('https://api.stripe.com/v1/payment_intents'),
-          body: body,
-          headers: {
-            'Authorization': 'Bearer $secret_key',
-            'Content-Type': 'application/x-www-form-urlencoded'
-          });
+      await DatabaseMethods().addUserOrderDetails(userOrderMap, id!, orderId);
+      await DatabaseMethods().addAdminOrderDetails(userOrderMap, orderId);
 
-      return jsonDecode(response.body);
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  displayPaymentSheet() async {
-    try {
-      await Stripe.instance.presentPaymentSheet().then(
-            (value) async {
-
-              //on successful payment store the user details and it's quantity ,totalamount price on cloudfirestore directly using map
-              String orderId=randomAlphaNumeric(10);
-              Map<String,dynamic> userOrderMap={
-                "Name":name,
-                "Email":email,
-                "Id":id,
-                "FoodName":widget.name,
-                "FoodImage":widget.image,
-                "Quantity":quantity.toString(),
-                "TotalAmount":totalprice.toString(),
-                "OrderId":orderId,
-                "Status":"Pending",
-                "Address":address??addressController.text,
-              };
-              //kuna user le kuna order leyo store garna ko lagi
-              await DatabaseMethods().addUserOrderDetails(userOrderMap, id!, orderId);
-              //admin le order kuna kuna gayo herna ko lagi without integrate on user
-              //for ordermanagement: admin ko lagi
-              await DatabaseMethods().addAdminOrderDetails(userOrderMap, orderId);
-
-          // On successful payment, show success message using Snackbar
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Payment Successful\nAmount: \$$totalprice"),
-              backgroundColor: Colors.green,
-            ),
-          );
-        },
-      );
-      paymentIntent = null;
-    } on StripeException catch (e) {
-      log(e.toString());
-      // Handle error (failed payment)
+      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Payment Failed\nPlease try again."),
-          backgroundColor: Colors.red,
+          content: Text("Payment Successful\nAmount: \$$totalprice"),
+          backgroundColor: Colors.green,
         ),
       );
-    } catch (e) {
-      log(e.toString());
-      // Handle any other exception
+    } else {
+      // If not enough balance, show error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Payment Failed\nPlease try again."),
+          content: Text("Insufficient funds in your wallet"),
           backgroundColor: Colors.red,
         ),
       );
     }
   }
+
+  //this methods are for payment integration and display payment success or failure message
+  // Future<void> makePayment(String amount) async {
+  //   try {
+  //     paymentIntent = await createPaymentIntent(amount, "USD");
+  //     await Stripe.instance.initPaymentSheet(
+  //         paymentSheetParameters: SetupPaymentSheetParameters(
+  //             customFlow: true,
+  //             merchantDisplayName: 'Food Go',
+  //             paymentIntentClientSecret: paymentIntent!['client_secret'],
+  //             style: ThemeMode.dark,
+  //             googlePay: const PaymentSheetGooglePay(
+  //               merchantCountryCode: 'US',
+  //               currencyCode: 'USD',
+  //               testEnv: true,
+  //             )));
+  //     await displayPaymentSheet();
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
+  //
+  // createPaymentIntent(String amount, String currency) async {
+  //   try {
+  //     Map<String, dynamic> body = {
+  //       'currency': currency,
+  //       // Convert amount to cents (or the smallest unit)
+  //       'amount': ((int.parse(amount)*100)).toString(), // Convert dollars to cents
+  //       'payment_method_types[]': 'card'
+  //     };
+  //
+  //     var response = await http.post(
+  //         Uri.parse('https://api.stripe.com/v1/payment_intents'),
+  //         body: body,
+  //         headers: {
+  //           'Authorization': 'Bearer $secret_key',
+  //           'Content-Type': 'application/x-www-form-urlencoded'
+  //         });
+  //
+  //     return jsonDecode(response.body);
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
+  //
+  // displayPaymentSheet() async {
+  //   try {
+  //     await Stripe.instance.presentPaymentSheet().then(
+  //           (value) async {
+  //
+  //             // After successful payment, reduce the wallet balance
+  //             if (int.parse(wallet!) >= totalprice) {
+  //               int updatedWallet = int.parse(wallet!) - totalprice;
+  //               await DatabaseMethods().updateUserWallet(email!, updatedWallet.toString());
+  //
+  //             //on successful payment store the user details and it's quantity ,totalamount price on cloudfirestore directly using map
+  //             String orderId=randomAlphaNumeric(10);
+  //             Map<String,dynamic> userOrderMap={
+  //               "Name":name,
+  //               "Email":email,
+  //               "Id":id,
+  //               "FoodName":widget.name,
+  //               "FoodImage":widget.image,
+  //               "Quantity":quantity.toString(),
+  //               "TotalAmount":totalprice.toString(),
+  //               "OrderId":orderId,
+  //               "Status":"Pending",
+  //               "Address":address??addressController.text,
+  //             };
+  //               // Store order in Firestore for user and admin
+  //               //kuna user le kuna order leyo store garna ko lagi
+  //             await DatabaseMethods().addUserOrderDetails(userOrderMap, id!, orderId);
+  //             //admin le order kuna kuna gayo herna ko lagi without integrate on user
+  //             //for ordermanagement: admin ko lagi
+  //             await DatabaseMethods().addAdminOrderDetails(userOrderMap, orderId);
+  //
+  //         // On successful payment, show success message using Snackbar
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(
+  //             content: Text("Payment Successful\nAmount: \$$totalprice"),
+  //             backgroundColor: Colors.green,
+  //           ),
+  //         );
+  //             } else {
+  //               // If not enough balance, show error
+  //               ScaffoldMessenger.of(context).showSnackBar(
+  //                 SnackBar(
+  //                   content: Text("Insufficient funds in your wallet"),
+  //                   backgroundColor: Colors.red,
+  //                 ),
+  //               );
+  //             }
+  //       },
+  //     );
+  //     paymentIntent = null;
+  //   } on StripeException catch (e) {
+  //     log(e.toString());
+  //     // Handle error (failed payment)
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text("Payment Failed\nPlease try again."),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     log(e.toString());
+  //     // Handle any other exception
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text("Payment Failed\nPlease try again."),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -48,6 +48,7 @@ class _WalletscreenState extends State<Walletscreen> {
   //payment integration methods
   Map<String, dynamic>? paymentIntent;
   int quantity=1,totalprice=0;
+
   //this methods are for payment integration and display payment success or failure message
   Future<void> makePayment(String amount) async {
     try {
