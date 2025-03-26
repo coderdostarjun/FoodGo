@@ -53,7 +53,7 @@ class _OrderscreenState extends State<Orderscreen> {
           {
             DocumentSnapshot ds=snapshot.data.docs[index];
             return  Container(
-              margin: EdgeInsets.only(left: 20.0,right: 20.0,top: 10.0),
+              margin: EdgeInsets.only(left: 20.0,right: 20.0,bottom: 20.0),
               child: Material(
                 elevation: 3.0,
             shape: RoundedRectangleBorder(
