@@ -52,4 +52,9 @@ Future updateUserWallet(String amount,String id) async
         .update(
         {"Status":'Delivered'});
   }
+
+  Future<Stream<QuerySnapshot>> getAllUsers() async
+  {
+    return await FirebaseFirestore.instance.collection("users").snapshots();
+  }
 }
