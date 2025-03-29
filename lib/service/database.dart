@@ -57,4 +57,20 @@ Future updateUserWallet(String amount,String id) async
   {
     return await FirebaseFirestore.instance.collection("users").snapshots();
   }
+
+  Future deleteUsers(String id) async
+  {
+    return await FirebaseFirestore.instance.collection("users").doc(id).delete();
+  }
+
+  Future addUserTransaction(Map<String,dynamic> userOrderMap,String id)async
+  {
+    return await FirebaseFirestore.instance.collection("users").doc(id).collection("Transaction").add(userOrderMap);
+  }
+
+  Future<Stream<QuerySnapshot>> getUserTransactions(String id) async
+  {
+    return await FirebaseFirestore.instance.collection("users").doc(id).collection("Transaction").snapshots();
+  }
+
 }

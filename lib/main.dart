@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:food_go/Admin/admin_home_screen.dart';
 import 'package:food_go/Admin/admin_login_screen.dart';
 import 'package:food_go/Admin/all_order.dart';
 import 'package:food_go/screen/BottomNavBar.dart';
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const Onboarding(),
-      home:MangeUser(),
+      home:Signupscreen(),
     );
   }
 }

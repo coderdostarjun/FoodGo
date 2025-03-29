@@ -8,6 +8,7 @@ import 'package:food_go/service/database.dart';
 import 'package:food_go/service/shared_pref.dart';
 import 'package:food_go/service/widget_support.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:random_string/random_string.dart';
 
 import '../service/key_constants.dart';
@@ -29,6 +30,7 @@ class _WalletscreenState extends State<Walletscreen> {
   }
    getUserWallet()async
    {
+     walletStream=await DatabaseMethods().getUserTransactions(id!);
      QuerySnapshot querySnapshot=await DatabaseMethods().getUserWalletByEmail(email!);
      wallet="${querySnapshot.docs[0]["Wallet"]}";
      print("ma sanga vako paisa $wallet");
@@ -105,6 +107,14 @@ class _WalletscreenState extends State<Walletscreen> {
               setState(() {
 
               });
+              //add transaction data
+              DateTime now=DateTime.now();
+              String formattedDate=DateFormat("dd MMM").format(now);
+              Map<String,dynamic> userTransaction={
+                "Amount":amount,
+                "Date":formattedDate,
+              };
+            await DatabaseMethods().addUserTransaction(userTransaction, id!);
 
           // On successful payment, show success message using Snackbar
           ScaffoldMessenger.of(context).showSnackBar(
@@ -186,6 +196,52 @@ class _WalletscreenState extends State<Walletscreen> {
         );
       },
     );
+  }
+
+  //to display transaction
+  Stream? walletStream;
+
+  Widget allTransaction()
+  {
+    return StreamBuilder(stream: walletStream, builder: (context,AsyncSnapshot snapshot)
+    {
+      return snapshot.hasData? ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: snapshot.data.docs.length,
+          itemBuilder: (context,index)
+          {
+            DocumentSnapshot ds=snapshot.data.docs[index];
+            return  Container(
+              margin: EdgeInsets.only(left: 20.0,right: 20.0,bottom: 20.0),
+              child: Material(
+                elevation: 3.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),)),
+                child: Container(
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.only(left: 20.0,right: 20.0),
+            width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(color: Color(0xffececf8),borderRadius: BorderRadius.circular(10)),
+          child: Row(
+          children: [
+          Text(ds["Date"],style: AppWidget.HeadLineTextFieldStyle(),),
+          SizedBox(width: 30.0,),
+          Column(
+          children: [
+          Text("Amount added to wallet",),
+          Text("\$"+ds["Amount"],style:TextStyle(color: Color(0xffef2b39),fontSize: 26.0,fontWeight: FontWeight.bold),)
+          ],
+            ),
+            ],
+            ),
+            ),
+            ),
+            );
+          }):Container();
+    });
+
   }
 
   @override
@@ -313,6 +369,27 @@ class _WalletscreenState extends State<Walletscreen> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(child: Text("Add Money",style: AppWidget.boldwhiteTextFieldStyle(),)),
+                      ),
+                    ),
+                    SizedBox(height: 20.0,),
+                    //expanded widget le k garxa vanda screen ma baki raheko sabai height width lena help garxa
+                    Expanded(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(color: Colors.white,
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),)),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 10.0,),
+                              Text("Your Transactions",style: AppWidget.boldTextFiledStyle(),),
+                              SizedBox(height: 20.0,),
+                              Container(
+                                height: MediaQuery.of(context).size.height/3,
+                                child: allTransaction(),
+                              )
+
+                            ],
+                          ),
                       ),
                     )
                   ],
