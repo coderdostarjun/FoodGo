@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_go/service/widget_support.dart';
 class Profilescreen extends StatefulWidget {
   const Profilescreen({super.key});
 
@@ -9,6 +10,149 @@ class Profilescreen extends StatefulWidget {
 class _ProfilescreenState extends State<Profilescreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Container(
+      child: Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 30.0),
+          child: Center(child: Text("Profile",style:AppWidget.HeadLineTextFieldStyle() ,)),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(top: 5.0),
+            padding: EdgeInsets.all(15),
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Color(0xffececf8),
+            borderRadius: BorderRadius.only(topRight:Radius.circular(20),topLeft: Radius.circular(20))),
+            child:Column(
+              children: [
+                CircleAvatar(
+                  radius: 60,
+                  backgroundImage:AssetImage("assets/images/boy.jpg"),
+                ),
+                SizedBox(height: 20.0,),
+
+                Container(
+                  margin: EdgeInsets.only(top: 10.0),
+                  child: Material(
+                    elevation: 3.0,
+                    borderRadius:BorderRadius.circular(10) ,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                          borderRadius:BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.person_outline,color: Color(0xffef2b39),size: 40,),
+                          SizedBox(width: 20.0,),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Name",style:AppWidget.SimpleTextFieldStyle(),),
+                              Text("Ayush Gupta",style: AppWidget.boldTextFiledStyle(),),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.0,),
+                Container(
+                  margin: EdgeInsets.only(top: 10.0),
+                  child: Material(
+                    elevation: 3.0,
+                    borderRadius:BorderRadius.circular(10) ,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.mail_outline,color: Color(0xffef2b39),size: 40,),
+                          SizedBox(width: 20.0,),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Email",style:AppWidget.SimpleTextFieldStyle(),),
+                              Text("admin@gmail.com",style: AppWidget.boldTextFiledStyle(),),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.0,),
+                Container(
+                  margin: EdgeInsets.only(top: 10.0),
+                  child: Material(
+                    elevation: 3.0,
+                    borderRadius:BorderRadius.circular(10) ,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10.0,right: 10.0,top: 20.0,bottom: 20.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.logout_outlined,color: Color(0xffef2b39),size: 40,),
+                          SizedBox(width: 20.0,),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("LogOut",style: AppWidget.boldTextFiledStyle(),),
+                            ],
+                          ),
+                          Spacer(),
+                          Icon(Icons.chevron_right,color: Color(0xffef2b39),size: 40,),
+
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.0,),
+                Container(
+                  margin: EdgeInsets.only(top: 10.0),
+                  child: Material(
+                    elevation: 3.0,
+                    borderRadius:BorderRadius.circular(10) ,
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10.0,right: 10.0,top: 20.0,bottom: 20.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete,color: Color(0xffef2b39),size: 40,),
+                          SizedBox(width: 20.0,),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Delete Account",style: AppWidget.boldTextFiledStyle(),),
+                            ],
+                          ),
+                          Spacer(),
+                          Icon(Icons.chevron_right,color: Color(0xffef2b39),size: 40,),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ),
+        ),
+      ],
+      ),
+    );
   }
 }

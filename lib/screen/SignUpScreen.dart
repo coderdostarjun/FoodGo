@@ -44,6 +44,7 @@ class _SignupscreenState extends State<Signupscreen> {
         await SharedPrefenceHelper().saveUserEmail(emailController.text);
         print("aba username print hoga:");
         print(SharedPrefenceHelper().getUserName().toString());
+
         //for store data on cloudfirestore
         await DatabaseMethods().addUserDetails(userInfoMap, Id);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
