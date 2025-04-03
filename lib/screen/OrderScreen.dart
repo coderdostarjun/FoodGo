@@ -81,7 +81,7 @@ class _OrderscreenState extends State<Orderscreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                          child: Image.asset(
+                          child: Image.network(
                             ds["FoodImage"],
                             height: 100,
                             width: 100,

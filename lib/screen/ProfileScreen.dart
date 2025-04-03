@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:food_go/screen/onboarding.dart';
+import 'package:food_go/service/auth.dart';
+import 'package:food_go/service/shared_pref.dart';
 import 'package:food_go/service/widget_support.dart';
 class Profilescreen extends StatefulWidget {
   const Profilescreen({super.key});
@@ -8,6 +11,22 @@ class Profilescreen extends StatefulWidget {
 }
 
 class _ProfilescreenState extends State<Profilescreen> {
+  //get userdetail from local storage
+  String? name,email;
+  getthesharedpref() async
+  {
+    name=await SharedPrefenceHelper().getUserName();
+    email=await SharedPrefenceHelper().getUserEmail();
+    setState(() {
+
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    getthesharedpref();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,7 +71,7 @@ class _ProfilescreenState extends State<Profilescreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("Name",style:AppWidget.SimpleTextFieldStyle(),),
-                              Text("Ayush Gupta",style: AppWidget.boldTextFiledStyle(),),
+                              Text(name ?? "Loading...",style: AppWidget.boldTextFiledStyle(),),
                             ],
                           )
                         ],
@@ -80,7 +99,7 @@ class _ProfilescreenState extends State<Profilescreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("Email",style:AppWidget.SimpleTextFieldStyle(),),
-                              Text("admin@gmail.com",style: AppWidget.boldTextFiledStyle(),),
+                              Text(email ?? "Loading...",style: AppWidget.boldTextFiledStyle(),),
                             ],
                           )
                         ],
@@ -89,60 +108,74 @@ class _ProfilescreenState extends State<Profilescreen> {
                   ),
                 ),
                 SizedBox(height: 20.0,),
-                Container(
-                  margin: EdgeInsets.only(top: 10.0),
-                  child: Material(
-                    elevation: 3.0,
-                    borderRadius:BorderRadius.circular(10) ,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10.0,right: 10.0,top: 20.0,bottom: 20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.logout_outlined,color: Color(0xffef2b39),size: 40,),
-                          SizedBox(width: 20.0,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("LogOut",style: AppWidget.boldTextFiledStyle(),),
-                            ],
-                          ),
-                          Spacer(),
-                          Icon(Icons.chevron_right,color: Color(0xffef2b39),size: 40,),
+                GestureDetector(
+                  onTap: () async
+                  {
+                    await AuthMethods().SignOut();
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Onboarding()));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    child: Material(
+                      elevation: 3.0,
+                      borderRadius:BorderRadius.circular(10) ,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10.0,right: 10.0,top: 20.0,bottom: 20.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout_outlined,color: Color(0xffef2b39),size: 40,),
+                            SizedBox(width: 20.0,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("LogOut",style: AppWidget.boldTextFiledStyle(),),
+                              ],
+                            ),
+                            Spacer(),
+                            Icon(Icons.chevron_right,color: Color(0xffef2b39),size: 40,),
 
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(height: 20.0,),
-                Container(
-                  margin: EdgeInsets.only(top: 10.0),
-                  child: Material(
-                    elevation: 3.0,
-                    borderRadius:BorderRadius.circular(10) ,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10.0,right: 10.0,top: 20.0,bottom: 20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.delete,color: Color(0xffef2b39),size: 40,),
-                          SizedBox(width: 20.0,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Delete Account",style: AppWidget.boldTextFiledStyle(),),
-                            ],
-                          ),
-                          Spacer(),
-                          Icon(Icons.chevron_right,color: Color(0xffef2b39),size: 40,),
-                        ],
+                GestureDetector(
+                  onTap: () async
+                  {
+                    await AuthMethods().deleteUser();
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=>Onboarding()));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    child: Material(
+                      elevation: 3.0,
+                      borderRadius:BorderRadius.circular(10) ,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 10.0,right: 10.0,top: 20.0,bottom: 20.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete,color: Color(0xffef2b39),size: 40,),
+                            SizedBox(width: 20.0,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Delete Account",style: AppWidget.boldTextFiledStyle(),),
+                              ],
+                            ),
+                            Spacer(),
+                            Icon(Icons.chevron_right,color: Color(0xffef2b39),size: 40,),
+                          ],
+                        ),
                       ),
                     ),
                   ),

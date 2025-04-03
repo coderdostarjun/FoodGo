@@ -54,8 +54,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // home: const Onboarding(),
-      home:Signupscreen(),
+      home: const Onboarding(),
+      // home:Signupscreen(),
+      // home: AdminHomeScreen(),
     );
   }
 }

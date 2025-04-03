@@ -73,4 +73,33 @@ Future updateUserWallet(String amount,String id) async
     return await FirebaseFirestore.instance.collection("users").doc(id).collection("Transaction").snapshots();
   }
 
+  //manage product and category
+
+// Add Category
+  Future<void> addCategory(String name, String image) async {
+    await FirebaseFirestore.instance.collection('categories').add({'name': name, 'image': image});
+  }
+
+  // Add Product
+  Future<void> addProduct(String category, String name, String image, String price,String description) async {
+    await FirebaseFirestore.instance.collection('products').add({
+      'category': category,
+      'name': name,
+      'image': image,
+      'price': price,
+      'description':description,
+    });
+  }
+
+  // Fetch Categories
+  Stream<QuerySnapshot> getCategories() {
+    return FirebaseFirestore.instance.collection('categories').snapshots();
+  }
+
+  // Fetch Products by Category
+  Stream<QuerySnapshot> getProducts(String category) {
+    return FirebaseFirestore.instance.collection('products').where('category', isEqualTo: category).snapshots();
+  }
+
+
 }

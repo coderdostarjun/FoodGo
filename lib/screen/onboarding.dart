@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:food_go/UiHelper.dart';
+import 'package:food_go/screen/LoginScreen.dart';
+import 'package:food_go/screen/SignUpScreen.dart';
 import 'package:food_go/service/widget_support.dart';
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -9,6 +13,13 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
+
+  void initState() {
+    Timer(Duration(seconds: 3),(){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Loginscreen()));
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

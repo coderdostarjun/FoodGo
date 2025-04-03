@@ -13,8 +13,8 @@ import '../service/key_constants.dart';
 import 'package:http/http.dart' as http;
 
 class Detailscreen extends StatefulWidget {
-String image, name, price;
-Detailscreen({required this.image,required this.name,required this.price});
+String image, name, price,description;
+Detailscreen({required this.image,required this.name,required this.price,required this.description});
 
   @override
   State<Detailscreen> createState() => _DetailscreenState();
@@ -72,7 +72,7 @@ class _DetailscreenState extends State<Detailscreen> {
           title: Text("Add Your Current Location", style: TextStyle(color: Color(0xff008080),fontSize: 20.0,fontWeight: FontWeight.bold)),
           content: TextField(
             controller: addressController,
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.text,
             decoration: InputDecoration(
               hintText: "Enter your location",
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
@@ -299,7 +299,7 @@ class _DetailscreenState extends State<Detailscreen> {
                   child: Icon(Icons.arrow_back,size: 30.0,color: Colors.white,),
                 ),
               ),
-              Center(child: Image.asset(widget.image,height: MediaQuery.of(context).size.height/3,fit: BoxFit.contain,)),
+              Center(child: Image.network(widget.image,height: MediaQuery.of(context).size.height/3,fit: BoxFit.contain,)),
               Text(widget.name,style: AppWidget.HeadLineTextFieldStyle(),),
               Text("\$${widget.price}",style: AppWidget.priceTextFiledStyle(),),
               SizedBox(height: 10.0,),
@@ -308,7 +308,8 @@ class _DetailscreenState extends State<Detailscreen> {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Text(
                     textAlign: TextAlign.justify,
-                    "We've established that most cheeses will melt when baked atop pizza. But which will not only melt but stretch into those gooey, messy strands that can make pizza eating such a delightfully challenging endeavor?",style: AppWidget.SimpleTextFieldStyle(),),
+                    widget.description,
+                    style: AppWidget.SimpleTextFieldStyle(),),
                 ),
               SizedBox(height: 20.0,),
               Text("Quantity",style: AppWidget.boldTextFiledStyle()),
