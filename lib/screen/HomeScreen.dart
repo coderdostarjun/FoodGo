@@ -1,13 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:food_go/model/burger_model.dart';
-import 'package:food_go/model/category_model.dart';
-import 'package:food_go/model/pizza_model.dart';
 import 'package:food_go/screen/DetailScreen.dart';
-import 'package:food_go/service/burger_data.dart';
-import 'package:food_go/service/category_data.dart';
 import 'package:food_go/service/database.dart';
-import 'package:food_go/service/pizza_dart.dart';
 import 'package:food_go/service/widget_support.dart';
 
 class Homescreen extends StatefulWidget {

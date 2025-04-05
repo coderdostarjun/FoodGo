@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const Onboarding(),
       // home:Signupscreen(),
-      // home: AdminHomeScreen(),
+      // home: AdminLoginScreen(),
     );
   }
 }
